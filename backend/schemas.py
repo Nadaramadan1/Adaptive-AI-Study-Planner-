@@ -12,15 +12,17 @@ class SubjectCreate(SubjectBase):
 class Subject(SubjectBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TaskBase(BaseModel):
     title: str
     subject_id: int
     deadline: datetime
     estimated_hours: float
-    priority: Optional[int] = 1
-    task_type: Optional[str] = "Assignment" # Assignment or Quiz
+    priority: Optional[int] = 1 # 1-Low, 2-Medium, 3-High
+    task_type: Optional[str] = "Assignment" # Assignment, Quiz, Project, Midterm, Final
+    description: Optional[str] = None
+    link: Optional[str] = None
 
 class TaskCreate(TaskBase):
     pass
@@ -29,7 +31,46 @@ class Task(TaskBase):
     id: int
     is_completed: bool
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class ResourceBase(BaseModel):
+    subject_id: int
+    title: str
+    link: str
+    resource_type: str
+    is_core: Optional[bool] = True
+
+class ResourceCreate(ResourceBase):
+    pass
+
+class Resource(ResourceBase):
+    id: int
+    class Config:
+        from_attributes = True
+
+class UserStatsBase(BaseModel):
+    points: int
+    streak: int
+    total_sessions: int
+
+class UserStats(UserStatsBase):
+    id: int
+    last_active: datetime
+    class Config:
+        from_attributes = True
+
+class MoodReflectionBase(BaseModel):
+    mood: str
+    note: Optional[str] = None
+
+class MoodReflectionCreate(MoodReflectionBase):
+    pass
+
+class MoodReflection(MoodReflectionBase):
+    id: int
+    date: datetime
+    class Config:
+        from_attributes = True
 
 class ScheduleBase(BaseModel):
     day_of_week: int
@@ -41,7 +82,7 @@ class ScheduleCreate(ScheduleBase):
 class Schedule(ScheduleBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ClassScheduleBase(BaseModel):
     day: int
@@ -60,7 +101,7 @@ class ClassScheduleCreate(ClassScheduleBase):
 class ClassSchedule(ClassScheduleBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class StudySession(BaseModel):
     day: int
@@ -68,3 +109,5 @@ class StudySession(BaseModel):
     task_title: str
     hours: float
     stress_level: str
+    pomodoro_cycles: int
+    suggested_break_activity: str

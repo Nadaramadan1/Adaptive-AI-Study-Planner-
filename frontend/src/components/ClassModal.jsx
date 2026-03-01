@@ -23,116 +23,68 @@ const ClassModal = ({ isOpen, onClose, onSave, onDelete, initialData }) => {
                 teaching_assistant: initialData.teaching_assistant || '',
                 color: initialData.color || '#4f46e5'
             });
-        } else {
-            setFormData({
-                subject_name: '',
-                slot_type: 'Lecture',
-                room: '',
-                professor: '',
-                section_group_code: '',
-                teaching_assistant: '',
-                color: '#4f46e5'
-            });
         }
     }, [initialData, isOpen]);
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSave(formData);
-    };
-
     return (
         <div className="modal-overlay">
-            <div className="glass-card modal-content">
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                    <h3>{initialData?.id ? 'Edit Class' : 'Add Class'}</h3>
-                    <X onClick={onClose} style={{ cursor: 'pointer' }} />
+            <div className="glass-card modal-content animate-fade-in" style={{ width: '450px', padding: '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 style={{ margin: 0 }}>{initialData?.id ? 'Edit Class' : 'Add Class'}</h3>
+                    <button className="btn btn-ghost" onClick={onClose} style={{ padding: '6px' }}><X size={20} /></button>
                 </div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Subject Name *</label>
+                <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>Subject Name *</label>
                         <input
-                            placeholder="Example: Data Structures"
+                            className="btn-ghost"
+                            style={{ width: '100%', padding: '12px' }}
                             value={formData.subject_name}
                             onChange={e => setFormData({ ...formData, subject_name: e.target.value })}
                             required
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Slot Type *</label>
-                        <select
-                            value={formData.slot_type}
-                            onChange={e => setFormData({ ...formData, slot_type: e.target.value })}
-                            required
-                        >
-                            <option value="Lecture">Lecture</option>
-                            <option value="Section">Section</option>
-                        </select>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>Type</label>
+                            <select className="btn-ghost" style={{ width: '100%', padding: '12px' }} value={formData.slot_type} onChange={e => setFormData({ ...formData, slot_type: e.target.value })}>
+                                <option value="Lecture">Lecture</option>
+                                <option value="Section">Section</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>Room / Hall</label>
+                            <input className="btn-ghost" style={{ width: '100%', padding: '12px' }} value={formData.room} onChange={e => setFormData({ ...formData, room: e.target.value })} placeholder="e.g. Hall A1" />
+                        </div>
                     </div>
 
                     {formData.slot_type === 'Lecture' ? (
-                        <>
-                            <div className="form-group">
-                                <label>Hall Number (Optional)</label>
-                                <input
-                                    placeholder="Example: Hall 4"
-                                    value={formData.room}
-                                    onChange={e => setFormData({ ...formData, room: e.target.value })}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Instructor (Optional)</label>
-                                <input
-                                    placeholder="Example: Dr. Ahmed"
-                                    value={formData.professor}
-                                    onChange={e => setFormData({ ...formData, professor: e.target.value })}
-                                />
-                            </div>
-                        </>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>Instructor (Optional)</label>
+                            <input className="btn-ghost" style={{ width: '100%', padding: '12px' }} value={formData.professor} onChange={e => setFormData({ ...formData, professor: e.target.value })} placeholder="Dr. Smith" />
+                        </div>
                     ) : (
-                        <>
-                            <div className="form-group">
-                                <label>Hall Number *</label>
-                                <input
-                                    placeholder="Example: Lab 201"
-                                    value={formData.room}
-                                    onChange={e => setFormData({ ...formData, room: e.target.value })}
-                                    required
-                                />
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>Section Number</label>
+                                <input className="btn-ghost" style={{ width: '100%', padding: '12px' }} value={formData.section_group_code} onChange={e => setFormData({ ...formData, section_group_code: e.target.value })} placeholder="e.g. 101" />
                             </div>
-                            <div className="form-group">
-                                <label>Section Group Code *</label>
-                                <input
-                                    placeholder="Example: S21"
-                                    value={formData.section_group_code}
-                                    onChange={e => setFormData({ ...formData, section_group_code: e.target.value })}
-                                    required
-                                />
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>TA Name</label>
+                                <input className="btn-ghost" style={{ width: '100%', padding: '12px' }} value={formData.teaching_assistant} onChange={e => setFormData({ ...formData, teaching_assistant: e.target.value })} placeholder="John Doe" />
                             </div>
-                            <div className="form-group">
-                                <label>Teaching Assistant (Optional)</label>
-                                <input
-                                    placeholder="Example: Eng. Nada"
-                                    value={formData.teaching_assistant}
-                                    onChange={e => setFormData({ ...formData, teaching_assistant: e.target.value })}
-                                />
-                            </div>
-                        </>
+                        </div>
                     )}
 
-                    <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                        <button type="submit" className="btn-primary" style={{ flex: 1 }}>Save</button>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                        <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Save Session</button>
                         {initialData?.id && (
-                            <button
-                                type="button"
-                                onClick={() => onDelete(initialData.id)}
-                                style={{ background: 'var(--danger)', color: 'white', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                            >
-                                <Trash2 size={20} />
+                            <button type="button" className="btn btn-ghost" onClick={() => onDelete(initialData.id)} style={{ color: 'var(--urgent)' }}>
+                                <Trash2 size={18} />
                             </button>
                         )}
                     </div>

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 import models, schemas, database, engine as core_engine
 from services.vision_service import VisionService
 from fastapi import UploadFile, File
@@ -108,6 +108,44 @@ async def upload_schedule(file: UploadFile = File(...), db: Session = Depends(da
     db.commit()
     print(f"DEBUG: Committed {len(created_slots)} slots to database")
     return {"message": f"Successfully imported {len(created_slots)} classes", "count": len(created_slots)}
+
+@app.get("/resources/", response_model=List[schemas.Resource])
+def read_resources(subject_id: int = None, db: Session = Depends(database.get_db)):
+    query = db.query(models.Resource)
+    if subject_id:
+        query = query.filter(models.Resource.subject_id == subject_id)
+    return query.all()
+
+@app.post("/resources/", response_model=schemas.Resource)
+def create_resource(resource: schemas.ResourceCreate, db: Session = Depends(database.get_db)):
+    db_resource = models.Resource(**resource.dict())
+    db.add(db_resource)
+    db.commit()
+    db.refresh(db_resource)
+    return db_resource
+
+@app.get("/stats/", response_model=schemas.UserStats)
+def get_user_stats(db: Session = Depends(database.get_db)):
+    stats = db.query(models.UserStats).first()
+    if not stats:
+        # Initialize stats if not exist
+        stats = models.UserStats(points=0, streak=0, total_sessions=0)
+        db.add(stats)
+        db.commit()
+        db.refresh(stats)
+    return stats
+
+@app.post("/mood/", response_model=schemas.MoodReflection)
+def create_mood_reflection(mood: schemas.MoodReflectionCreate, db: Session = Depends(database.get_db)):
+    db_mood = models.MoodReflection(**mood.dict())
+    db.add(db_mood)
+    db.commit()
+    db.refresh(db_mood)
+    return db_mood
+
+@app.get("/mood/", response_model=List[schemas.MoodReflection])
+def get_mood_reflections(db: Session = Depends(database.get_db)):
+    return db.query(models.MoodReflection).order_by(models.MoodReflection.date.desc()).limit(10).all()
 
 @app.get("/")
 def health_check():

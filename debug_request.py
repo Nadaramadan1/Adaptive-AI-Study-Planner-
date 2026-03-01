@@ -1,16 +1,8 @@
-import sys
-import os
-sys.path.append(os.path.join(os.getcwd(), 'backend'))
-
-from fastapi.testclient import TestClient
-from main import app
-
-client = TestClient(app)
+import requests
 
 try:
-    response = client.get("/plan/")
-    print(f"Status Code: {response.status_code}")
-    print(f"Response Body: {response.text}")
+    res = requests.get("http://127.0.0.1:8000/plan/")
+    print(f"Status: {res.status_code}")
+    print(f"Body: {res.text}")
 except Exception as e:
-    import traceback
-    traceback.print_exc()
+    print(f"Error: {e}")

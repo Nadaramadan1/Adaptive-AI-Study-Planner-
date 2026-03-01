@@ -1,38 +1,38 @@
 C:\Python314\Lib\site-packages\pydantic\_internal\_config.py:383: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [4844]
+INFO:     Started server process [22248]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     127.0.0.1:56690 - "GET /plan/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56690 - "GET /plan/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56691 - "GET /tasks/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56691 - "GET /tasks/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56691 - "GET /subjects/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56691 - "GET /subjects/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56691 - "GET /class-schedule/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56691 - "GET /class-schedule/ HTTP/1.1" 200 OK
-DEBUG: Received file upload: Screenshot_20260219_203903_Drive (1)(1).PDF
-DEBUG: Extracted 3 slots from vision service
-DEBUG: Committed 3 slots to database
-INFO:     127.0.0.1:56705 - "POST /upload-schedule/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56705 - "GET /plan/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56705 - "GET /tasks/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56705 - "GET /subjects/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56705 - "GET /class-schedule/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56730 - "DELETE /class-schedule/4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56730 - "GET /plan/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56730 - "GET /tasks/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56730 - "GET /subjects/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56730 - "GET /class-schedule/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "DELETE /class-schedule/3 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /plan/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /tasks/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /subjects/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /class-schedule/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "DELETE /class-schedule/2 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /plan/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /tasks/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /subjects/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56734 - "GET /class-schedule/ HTTP/1.1" 200 OK
+ERROR:    Traceback (most recent call last):
+  File "C:\Python314\Lib\asyncio\runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python314\Lib\asyncio\base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python314\Lib\asyncio\runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python314\Lib\asyncio\runners.py", line 132, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python314\Lib\site-packages\starlette\routing.py", line 701, in lifespan
+    await receive()
+  File "C:\Python314\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+

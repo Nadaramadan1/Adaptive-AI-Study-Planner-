@@ -22,10 +22,21 @@ class StudyEngine:
             return "High Pressure"
 
     @staticmethod
+    def get_mindful_break() -> str:
+        breaks = [
+            "1-minute deep breathing",
+            "5-minute light stretching",
+            "Eye rest: Look at something 20ft away for 20s",
+            "Quick mindful walk to get water",
+            "2-minute guided meditation",
+            "Listen to a calming lo-fi track"
+        ]
+        import random
+        return random.choice(breaks)
+
+    @staticmethod
     def generate_plan(tasks: List[models.Task], schedules: List[models.UserSchedule], class_schedules: List[models.ClassSchedule] = []) -> List[schemas.StudySession]:
         plan = []
-        # Support conversion from Sat-Thu (0-5) to matching indices if needed
-        # For simple MVP, we assume schedules.day_of_week matches class_schedules.day
         
         # Base available hours from user settings
         schedule_map = {s.day_of_week: s.available_hours for s in schedules}
@@ -43,25 +54,28 @@ class StudyEngine:
         exam_proximity = 10 
         stress_score = StudyEngine.calculate_stress_score(deadlines_this_week, total_hours, exam_proximity)
         stress_label = StudyEngine.classify_stress(stress_score)
-
-        # Adaptive logic: If High Pressure, try to distribute more or flag. 
-        # (In MVP we mainly label it)
         
-        # Sort tasks by priority and deadline
-        sorted_tasks = sorted(tasks, key=lambda x: (x.priority, x.deadline))
+        # Sort tasks by priority (High: 3, Med: 2, Low: 1) and deadline
+        sorted_tasks = sorted(tasks, key=lambda x: (-x.priority, x.deadline))
         
         for task in sorted_tasks:
             remaining_hours = task.estimated_hours
-            for day in range(7):  # Sat-Fri (or Mon-Sun depends on index)
+            for day in range(7):  # Sat-Fri (0-6)
                 if day in schedule_map and schedule_map[day] > 0 and remaining_hours > 0:
                     allocated = min(schedule_map[day], remaining_hours)
                     if allocated > 0:
+                        # 1 Pomodoro = 25m work + 5m break = 30m total (0.5h)
+                        cycles = int(allocated / 0.5)
+                        if cycles == 0 and allocated > 0: cycles = 1
+
                         plan.append(schemas.StudySession(
                             day=day,
                             task_id=task.id,
                             task_title=task.title,
                             hours=round(allocated, 1),
-                            stress_level=stress_label
+                            stress_level=stress_label,
+                            pomodoro_cycles=cycles,
+                            suggested_break_activity=StudyEngine.get_mindful_break()
                         ))
                         schedule_map[day] -= allocated
                         remaining_hours -= allocated

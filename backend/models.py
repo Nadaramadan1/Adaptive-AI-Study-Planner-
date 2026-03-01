@@ -17,11 +17,37 @@ class Task(Base):
     subject_id = Column(Integer, ForeignKey("subjects.id"))
     deadline = Column(DateTime)
     estimated_hours = Column(Float)
-    priority = Column(Integer, default=1)
+    priority = Column(Integer, default=1) # 1-Low, 2-Medium, 3-High
     is_completed = Column(Boolean, default=False)
-    task_type = Column(String, default="Assignment")  # Assignment or Quiz
+    task_type = Column(String, default="Assignment")  # Assignment, Quiz, Project, Midterm, Final
+    description = Column(String, nullable=True)
+    link = Column(String, nullable=True)
 
     subject = relationship("Subject")
+
+class Resource(Base):
+    __tablename__ = "resources"
+    id = Column(Integer, primary_key=True, index=True)
+    subject_id = Column(Integer, ForeignKey("subjects.id"))
+    title = Column(String)
+    link = Column(String)
+    resource_type = Column(String) # Google Drive, YouTube, Notes
+    is_core = Column(Boolean, default=True)
+
+class UserStats(Base):
+    __tablename__ = "user_stats"
+    id = Column(Integer, primary_key=True, index=True)
+    points = Column(Integer, default=0)
+    streak = Column(Integer, default=0)
+    last_active = Column(DateTime, default=datetime.datetime.now)
+    total_sessions = Column(Integer, default=0)
+
+class MoodReflection(Base):
+    __tablename__ = "mood_reflections"
+    id = Column(Integer, primary_key=True, index=True)
+    date = Column(DateTime, default=datetime.datetime.now)
+    mood = Column(String) # Happy, Stressed, Productive, Tired, Relaxed
+    note = Column(String, nullable=True)
 
 class UserSchedule(Base):
     __tablename__ = "user_schedules"
@@ -32,8 +58,8 @@ class UserSchedule(Base):
 class ClassSchedule(Base):
     __tablename__ = "class_schedules"
     id = Column(Integer, primary_key=True, index=True)
-    day = Column(Integer)  # 0-5 (Sat-Thu)
-    slot_index = Column(Integer)  # 0-6
+    day = Column(Integer)  # 0-6 (Sat-Fri)
+    slot_index = Column(Integer)  # 0-5
     subject_name = Column(String)
     room = Column(String, nullable=True)
     professor = Column(String, nullable=True)
